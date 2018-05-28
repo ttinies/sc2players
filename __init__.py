@@ -17,24 +17,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 
-
-
-create player profile
-    player name/ID
-    player type
-    if AI or bot
-        command to execute agent launch/init
-        command to execute agent callback (handled by launch/init?)
-select player profile
-remove player profile
-edit player profile
-
-
-search for stale profiles
-
-remove stale profiles
-
-
 types of player profiles
     in-game PlayerAgent
         limited knowledge
