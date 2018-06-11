@@ -10,6 +10,7 @@ from six import iteritems, itervalues # python 2/3 compatibility
 
 import glob
 import os
+import re
 import time
 
 from sc2players import constants as c
@@ -22,9 +23,7 @@ playerCache = {} # mapping of player names to PlayerRecord objects
 ################################################################################
 def addPlayer(settings):
     """define a new PlayerRecord setting and save to disk file"""
-    for k,v in iteritems(settings): # restrict valid passed params
-        if k == "created":  raise ValueError("parameter 'created' is expected to be automatmically generated.")
-        if k == "_matches": raise ValueError("matches are declared after playing matches, not during init.")
+    _validate(settings)
     player = PlayerRecord(settings)
     player.save()
     getKnownPlayers()[player.name] = player
@@ -35,9 +34,7 @@ def addPlayer(settings):
 def updatePlayer(name, settings):
     """update an existing PlayerRecord setting and save to disk file"""
     player = delPlayer(name) # remove the existing record
-    for k,v in iteritems(settings): # restrict valid passed params
-        if k == "created":  raise ValueError("parameter 'created' is expected to be automatmically generated.")
-        if k == "_matches": raise ValueError("matches are declared after playing matches, not during init.")
+    _validate(settings)
     player.update(settings)
     player.save()
     getKnownPlayers()[player.name] = player
@@ -72,10 +69,21 @@ def getKnownPlayers(reset=False):
         jsonFiles = os.path.join(c.PLAYERS_FOLDER, "*.json")
         for playerFilepath in glob.glob(jsonFiles):
             filename = os.path.basename(playerFilepath)
-            name = filename.rstrip("\.json").lstrip("player_")
+            name = re.sub("^player_", "", filename)
+            name = re.sub("\.json$",  "", name)
             player = PlayerRecord(name)
             playerCache[player.name] = player
     return playerCache
+
+
+################################################################################
+def getBlizzBotPlayers():
+    """identify all of Blizzard's built-in bots"""
+    ret = {}
+    for pName,p in iteritems(getKnownPlayers()):
+        if p.isComputer:
+            ret[pName] = p
+    return ret
 
 
 ################################################################################
@@ -104,6 +112,12 @@ def removeStaleRecords(**kwargs):
 
 
 ################################################################################
-__all__ = ["addPlayer", "getPlayer", "delPlayer", "getKnownPlayers",
+def _validate(settings):
+    if "created"  in settings:  raise ValueError("parameter 'created' is expected to be automatmically generated.")
+    if "_matches" in settings:  raise ValueError("matches are declared after playing matches, not during init.")
+    
+
+################################################################################
+__all__ = ["addPlayer", "getPlayer", "delPlayer", "getKnownPlayers", "getBlizzBotPlayers",
            "updatePlayer", "getStaleRecords", "removeStaleRecords"]
 
