@@ -42,7 +42,9 @@ from __future__ import absolute_import
 from __future__ import division       # python 2/3 compatibility
 from __future__ import print_function # python 2/3 compatibility
 
-from .playerManagement  import addPlayer, updatePlayer, getPlayer, delPlayer, getKnownPlayers, getStaleRecords, removeStaleRecords
-from .playerRecord      import PlayerRecord
-from .playerPreGame     import PlayerPreGame
+from sc2players.playerManagement  import addPlayer, updatePlayer, getPlayer, \
+            delPlayer, getKnownPlayers, getBlizzBotPlayers, \
+            getStaleRecords, removeStaleRecords
+from sc2players.playerRecord      import PlayerRecord
+from sc2players.playerPreGame     import PlayerPreGame
 
