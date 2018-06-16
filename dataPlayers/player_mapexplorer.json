@@ -1,0 +1,7 @@
+{
+    "created": 1527519534.7267036,
+    "initCmd": "sc2ai.agents.newexplorer",
+    "name": "mapexplorer",
+    "rating": 496,
+    "type": "ai"
+}
