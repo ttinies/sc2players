@@ -17,23 +17,23 @@ class PlayerPreGame(PlayerRecord):
     def __init__(self, playerProfile, selectedRace=c.RANDOM, observe=False):
         if isinstance(playerProfile, PlayerPreGame): # copy constructor (ignore other params)
             self.selectedRace   = playerProfile.selectedRace#c.SelectRaces(playerProfile.selectedRace.type)
-            self.observer       = playerProfile.observer
+            self.isObserver     = playerProfile.isObserver
         else:
             self.selectedRace   = c.SelectRaces(selectedRace)
-            self.observer       = observe
+            self.isObserver     = observe
         super(PlayerPreGame, self).__init__(source=playerProfile) # could also specify a player's profile name
     ############################################################################
     def __repr__(self):
         control = self.control()
-        if control == c.COMPUTER:   return super(self, PlayerPreGame).__repr__() # already declared
-        added = "" if self.observer else "%s "%(self.selectedRace.type)
+        if control == c.COMPUTER:   return super(PlayerPreGame, self).__repr__() # already declared
+        added = "" if self.isObserver else "%s "%(self.selectedRace.type)
         return "<%s %s%s %s-%s>"%(self.__class__.__name__,
             added, control.type, self.type.type, self.name)
     ############################################################################
     #@property
     def control(self):
         if   self.type == c.COMPUTER:   value = c.COMPUTER
-        elif self.observer:             value = c.OBSERVER
+        elif self.isObserver:           value = c.OBSERVER
         else:                           value = c.PARTICIPANT
         return c.PlayerControls(value)
 
