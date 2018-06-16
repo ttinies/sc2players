@@ -13,7 +13,7 @@ import time
 
 from sc2players import constants as c
 from sc2players.playerManagement import *
-
+from sc2players.playerRecord import PlayerRecord
 
 #################################################################################
 if __name__=='__main__': # mini/unit test
@@ -28,8 +28,8 @@ if __name__=='__main__': # mini/unit test
     #parser.add_argument("--path"        , default=None, action="store_true" , help="provide the absolute path to the file")
     #
     #parser.add_argument("--all"         , action="store_true"   , help="Display all known ladders.")
-    
     actionOpts = parser.add_argument_group('player record action options (pick at most one)')
+    actionOpts.add_argument('criteria'      , nargs='*'                         , help="define additional attributes as key=value pairs.  KEYS: %s"%(", ".join(PlayerRecord.AVAILABLE_KEYS))) # the remaining arguments are processed together
     actionOpts.add_argument("--add"         , action="store_true"               , help="Add settings as a new player definition. (Provide criteria)")
     actionOpts.add_argument("--update"      , type=str                          , help="update settings for selected record.")
     actionOpts.add_argument("--get"         , type=str                          , help="the specific player to highlight.")
@@ -40,8 +40,6 @@ if __name__=='__main__': # mini/unit test
     filterOpts.add_argument("--exclude"     , action="store_true"               , help="exclude players with names specified by --get.")
     filterOpts.add_argument("--best"        , action="store_true"               , help="match players that are closer with --get")
     #filterOpts.add_argument("--race"        
-    criteriaOpts = parser.add_argument_group('critiera used when --add, --update OR select display options are specified')
-    criteriaOpts.add_argument('criteria'    , nargs='*'                         , help="define additional criteria as key=value pairs") # the remaining arguments are processed together
     displayOpts = parser.add_argument_group('display options')
     displayOpts.add_argument("--details"    , default=None, action="store_true" , help="show details of each player identified.")
     displayOpts.add_argument("--summary"    , action="store_true"               , help="show an additional summary")
@@ -64,11 +62,11 @@ if __name__=='__main__': # mini/unit test
     action = True
     # identify which player records are desired/affected by the retrieval option
     if   options.stale:     records = getStaleRecords(limit=options.stale)
-    elif options.rmstale:  records = removeStaleRecords(limit=options.rmstale)
-    elif options.get:       records = [getPlayer(options.get)] ; options.nosummary=True # ensure the single record is a list
-    elif options.add:       records = [addPlayer(criteria)]    ; options.nosummary=True
-    elif options.update:    records = [updatePlayer(options.update, criteria)] ; options.nosummary=True
-    elif options.rm:        records = [delPlayer(options.rm)]  ; options.nosummary=True 
+    elif options.rmstale:   records = removeStaleRecords(limit=options.rmstale)
+    elif options.get:       records = [getPlayer(options.get)]                        ; options.summary=True # ensure the single record is a list
+    elif options.add:       records = [addPlayer(criteria)]    ; options.details=True ; options.summary=True
+    elif options.update:    records = [updatePlayer(options.update, criteria)] ; options.details=True ; options.summary=True
+    elif options.rm:        records = [delPlayer(options.rm)]  ; options.details=True ; options.summary=True 
     else:                   records = list(itervalues(getKnownPlayers(reset=True))); action=False
     # perform the desired action on them
     for r in records:
@@ -79,6 +77,7 @@ if __name__=='__main__': # mini/unit test
             if r.type in [c.BOT, c.AI]:
                 attrs.append(("init command", r.initCmd))
             attrs.append(("total matches", len(r.matches)))
+            attrs.append(("rating", r.rating))
             attrs.append(("creation", time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(r.created))))
             for k,v in attrs:#sorted(iteritems(attrs), reverse=True):
                 print(printStr%(k, v))
