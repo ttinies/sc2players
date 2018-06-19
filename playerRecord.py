@@ -34,7 +34,7 @@ class PlayerRecord(object):
         self.type                   = c.PlayerDesigns(c.HUMAN)
         self.difficulty             = c.ComputerDifficulties(None) # only matters if type is a computer
         self.initCmd                = "" # only used if self.type is an AI or bot
-        self.rating                 = 500
+        self.rating                 = c.DEFAULT_RATING
         self.created                = time.time() # origination timestamp
         self._matches               = [] # match history
         # initialize with new values
@@ -121,6 +121,12 @@ class PlayerRecord(object):
         if badAttrsMsg:
             raise ValueError("Encountered invalid attributes.  ALLOWED: %s%s%s"\
                 %(list(self.__dict__), os.linesep, badAttrsMsg))
+    ############################################################################
+    def control(self):
+        """the type of control this player exhibits"""
+        if   self.isComputer:   value = c.COMPUTER
+        else:                   value = c.PARTICIPANT
+        return c.PlayerControls(value)
     ############################################################################
     def load(self, playerName=None):
         """retrieve the PlayerRecord settings from saved disk file"""
