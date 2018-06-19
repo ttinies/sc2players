@@ -18,4 +18,5 @@ PLAYERS_FOLDER      = os.path.join(os.path.dirname(os.path.abspath(__file__)), "
 DEFAULT_TIME_LIMIT  = 90 # days
 NO_ACTIVITY_LIMIT   = 10 # days
 RECENT_MATCHES      = 15 # number of matches
+DEFAULT_RATING      = 500
 
