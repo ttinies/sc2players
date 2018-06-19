@@ -15,6 +15,8 @@ import time
 
 from sc2players import constants as c
 from sc2players.playerRecord import PlayerRecord
+from sc2players.playerPreGame import PlayerPreGame
+
 
 ################################################################################
 playerCache = {} # mapping of player names to PlayerRecord objects
@@ -59,6 +61,18 @@ def delPlayer(name):
     try:    del getKnownPlayers()[player.name] # forget object from cache
     except: pass
     return player # leave it to the caller to process further or allow deallocation 
+
+
+################################################################################
+def buildPlayer(name, ptype, cmd='', difficulty=None, rating=None, race=None, obs=False, pid=0):
+    newRating = rating or c.DEFAULT_RATING
+    if not isinstance(difficulty, c.ComputerDifficulties):
+          newDiff = c.ComputerDifficulties(difficulty)
+    else: newDiff =                        difficulty
+    ret = PlayerRecord(name=name, type=ptype, initCmd=cmd, difficulty=newDiff, rating=newRating)
+    if bool(race or obs or pid):
+          return PlayerPreGame(ret, selectedRace=race, observe=obs, playerID=pid)
+    else: return ret
 
 
 ################################################################################
