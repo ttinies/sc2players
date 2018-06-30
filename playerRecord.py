@@ -122,6 +122,7 @@ class PlayerRecord(object):
             raise ValueError("Encountered invalid attributes.  ALLOWED: %s%s%s"\
                 %(list(self.__dict__), os.linesep, badAttrsMsg))
     ############################################################################
+    @property
     def control(self):
         """the type of control this player exhibits"""
         if   self.isComputer:   value = c.COMPUTER
@@ -153,6 +154,7 @@ class PlayerRecord(object):
             typecast = type( getattr(self, k) )
             if typecast==bool and v=="False":   newval = False # "False" evalued as boolean is True because its length > 0
             elif "<" in str(v) or v==None:      newval = typecast(v)
+            elif k == "initCmd":                newval = str(v) # specifically don't mangle the command as specified
             else:                               newval = typecast(str(v).lower())
             setattr(self, k, newval)
         if self.isComputer: pass
