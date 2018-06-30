@@ -26,20 +26,25 @@ class PlayerPreGame(PlayerRecord):
         super(PlayerPreGame, self).__init__(source=playerProfile) # could also specify a player's profile name
     ############################################################################
     def __repr__(self):
-        control = self.control()
         #if control == c.COMPUTER:   return super(PlayerPreGame, self).__repr__() # already declared
         added = ""
         if not self.isObserver:
             if self.playerID:
                 added += "#%d "%self.playerID
-            added += "%s "%(self.selectedRace.type)
+            added += "%s "%(self.race.type)
         return "<%s %s%s %s-%s>"%(self.__class__.__name__,
-            added, control.type, self.type.type, self.name)
+            added, self.control.type, self.type.type, self.name)
     ############################################################################
+    @property
     def control(self):
         """the type of control this player exhibits"""
         if   self.isComputer:   value = c.COMPUTER
-        elif self.isObserver:   value = c.OBSERVER
+        elif self.isObserver:   value = c.OBSERVER # only possible for a pre-game player
         else:                   value = c.PARTICIPANT
         return c.PlayerControls(value)
+    ############################################################################
+    @property
+    def race(self):
+        """implemented to allow derived classes to define race identification differently"""
+        return self.selectedRace
 
