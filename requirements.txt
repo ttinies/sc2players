@@ -1,0 +1,6 @@
+pytest
+pytest-cov
+coveralls
+PyYAML
+sc2common
+six
