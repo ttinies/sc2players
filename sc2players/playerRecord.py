@@ -6,7 +6,6 @@ from __future__ import absolute_import
 from __future__ import division       # python 2/3 compatibility
 from __future__ import print_function # python 2/3 compatibility
 
-from builtins import str as text # python 2/3 compatibility
 from six import iteritems # python 2/3 compatibility
 
 import json
@@ -38,7 +37,7 @@ class PlayerRecord(object):
         self.created                = time.time() # origination timestamp
         self._matches               = [] # match history
         # initialize with new values
-        if   isinstance(source, text):          self.load(source) # assume a player file to load
+        if   isinstance(source, str):           self.load(source) # assume a player file to load
         elif isinstance(source, dict):          self.update(source) # assume attribute dictionary
         elif isinstance(source, PlayerRecord):  self.update(source.__dict__) # copy constructor
         self.update(override)
