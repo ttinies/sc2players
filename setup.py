@@ -97,10 +97,12 @@ setup(
     python_requires=REQUIRES_PYTHON,
     url=URL,
     packages=find_packages(exclude=("tests",)),
-    entry_points={"console_scripts": []},
+    entry_points={
+         "console_scripts": ["sc2players=sc2players.cli:cli"],
+    },
     install_requires=REQUIRED,
     include_package_data=True,
-    package_data={},
+    package_data={"sc2players": "sc2players/dataPlayers/*.json"},
     license="Apache License 2.0",
     classifiers=[
         # Trove classifiers
@@ -115,5 +117,7 @@ setup(
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
     ],
     # $ setup.py publish support.
-    cmdclass={"upload": UploadCommand},
+    cmdclass={
+        "upload": UploadCommand,
+    },
 )
