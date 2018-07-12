@@ -1,2 +1,2 @@
 include README.md LICENSE
-recursive-include *.SC2Map 
+recursive-include *.json 
