@@ -48,4 +48,4 @@ from sc2players.playerManagement  import addPlayer, updatePlayer, getPlayer, \
 from sc2players.playerRecord      import PlayerRecord
 from sc2players.playerPreGame     import PlayerPreGame
 
-from sc2players.__version__ import *
+from sc2players .__version__ import *
