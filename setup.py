@@ -97,10 +97,10 @@ setup(
     python_requires=REQUIRES_PYTHON,
     url=URL,
     packages=find_packages(exclude=("tests",)),
-    entry_points={"console_scripts": ["sc2players=sc2players.cli:main"]},
+    entry_points={"console_scripts": []},
     install_requires=REQUIRED,
     include_package_data=True,
-    package_data={"sc2players": "dataPlayers"},
+    package_data={},
     license="Apache License 2.0",
     classifiers=[
         # Trove classifiers
