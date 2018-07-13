@@ -102,7 +102,7 @@ setup(
     },
     install_requires=REQUIRED,
     include_package_data=True,
-    package_data={"sc2players": "sc2players/dataPlayers/*.json"},
+    package_data={"sc2players": "dataPlayers/*.json"},
     license="Apache License 2.0",
     classifiers=[
         # Trove classifiers
