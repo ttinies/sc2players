@@ -1,2 +1,3 @@
 include README.md LICENSE
-recursive-include sc2players/tests *.py
+recursive-include tests *.py
+recursive-include sc2players/dataPlayers *.json
