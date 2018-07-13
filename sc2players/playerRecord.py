@@ -13,7 +13,7 @@ import os
 import time
 
 from sc2players import constants as c
-from sc2matchHistory import getPlayerHistory
+#from sc2matchHistory import getPlayerHistory
 
 
 ################################################################################
@@ -106,9 +106,10 @@ class PlayerRecord(object):
     @property
     def matches(self):
         """retrieve the match history for this player from the matchHistory repo and cache the result"""
-        if not self._matches: # load match History applicable to this player
-            self._matches = getPlayerHistory(self.name)
-        return self._matches
+        raise NotImplementedError("must finish player history first")
+        #if not self._matches: # load match History applicable to this player
+        #    self._matches = getPlayerHistory(self.name)
+        #return self._matches
     ############################################################################
     def _validateAttrs(self, keys):
         """prove that all attributes are defined appropriately"""
