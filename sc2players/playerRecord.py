@@ -113,10 +113,11 @@ class PlayerRecord(object):
     ############################################################################
     def _validateAttrs(self, keys):
         """prove that all attributes are defined appropriately"""
-        badAttrsMsg = ""
+        badAttrs = []
         for k in keys:
             if k not in self.__dict__:
-                badAttrsMsg += "Attribute key '%s' is not a valid attribute"%(k)
+                badAttrs.append("Attribute key '%s' is not a valid attribute"%(k))
+        badAttrsMsg = os.linesep.join(badAttrs)
         if not keys: return # is iterable, but didn't contain any keys
         if badAttrsMsg:
             raise ValueError("Encountered invalid attributes.  ALLOWED: %s%s%s"\
@@ -153,6 +154,8 @@ class PlayerRecord(object):
         for k,v in iteritems(attrs):
             typecast = type( getattr(self, k) )
             if typecast==bool and v=="False":   newval = False # "False" evalued as boolean is True because its length > 0
+            elif issubclass(typecast, c.RestrictedType): # let the RestrictedType handle the type setting, value matching
+                                                newval = typecast(v)
             elif "<" in str(v) or v==None:      newval = typecast(v)
             elif k == "initCmd":                newval = str(v) # specifically don't mangle the command as specified
             else:                               newval = typecast(str(v).lower())
@@ -161,7 +164,7 @@ class PlayerRecord(object):
         elif "difficulty" in attrs and attrs["difficulty"]!=None: # the final state of this PlayerRecord cannot be a non-computer and specify a difficulty
             raise ValueError("%s type %s=%s does not have a difficulty"%(
                 self.__class__.__name__, self.type.__class__.__name__, self.type.type))
-        else: self.difficulty = None
+        else: self.difficulty = c.ComputerDifficulties(None)
     ############################################################################
     def matchSubset(**kwargs):
         """extract matches from player's entire match history given matching criteria kwargs"""
