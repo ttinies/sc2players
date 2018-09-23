@@ -17,7 +17,7 @@ DESCRIPTION = "A suystem of managing Starcraft 2 player profiles."
 URL = "https://github.com/ttinies/sc2players"
 EMAIL = "help.fool@versentiedge.com"
 AUTHOR = "Versentiedge LLC"
-REQUIRES_PYTHON = ">2.6"
+REQUIRES_PYTHON = ">3.4"
 VERSION = None
 
 # What packages are required for this module to be executed?
