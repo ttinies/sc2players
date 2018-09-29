@@ -1,0 +1,12 @@
+{
+    "created": 1537973159.106842,
+    "initCmd": "sc2ai.agents.tbd",
+    "initOptions": {
+        "raw": true,
+        "score": true
+    },
+    "raceDefault": "random",
+    "name": "efishandsee",
+    "rating": 500,
+    "type": "ai"
+}
