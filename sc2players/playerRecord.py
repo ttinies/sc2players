@@ -10,6 +10,7 @@ from six import iteritems # python 2/3 compatibility
 
 import json
 import os
+import re
 import time
 
 from sc2players import constants as c
@@ -24,6 +25,8 @@ class PlayerRecord(object):
         "type",
         "difficulty",
         "initCmd",
+        "initOptions",
+        "raceDefault",
         "rating",
     ]
     ############################################################################
@@ -33,8 +36,10 @@ class PlayerRecord(object):
         self.type                   = c.PlayerDesigns(c.HUMAN)
         self.difficulty             = c.ComputerDifficulties(None) # only matters if type is a computer
         self.initCmd                = "" # only used if self.type is an AI or bot
+        self.initOptions            = {}
         self.rating                 = c.DEFAULT_RATING
         self.created                = time.time() # origination timestamp
+        self.raceDefault            = c.RANDOM
         self._matches               = [] # match history
         # initialize with new values
         if   isinstance(source, str):           self.load(source) # assume a player file to load
@@ -58,6 +63,10 @@ class PlayerRecord(object):
         self.update(attrs) # allow a dictionary to be passed
         self.update(kwargs)
         return self
+    ############################################################################
+    @property
+    def initOptStr(self):
+        return " ".join(["%s=%s"%(k,v) for k, v in self.initOptions.items()])
     ############################################################################
     @property
     def isAI(self):         return self.type == c.AI
@@ -106,7 +115,8 @@ class PlayerRecord(object):
     @property
     def matches(self):
         """retrieve the match history for this player from the matchHistory repo and cache the result"""
-        raise NotImplementedError("must finish player history first")
+        return []
+        #raise NotImplementedError("must finish player history first")
         #if not self._matches: # load match History applicable to this player
         #    self._matches = getPlayerHistory(self.name)
         #return self._matches
@@ -150,6 +160,32 @@ class PlayerRecord(object):
     ############################################################################
     def update(self, attrs):
         """update attributes initialized with the proper type"""
+        ########################################################################
+        def convertStrToDict(strVal):
+            if isinstance(strVal, dict): return strVal
+            strVal = re.sub("[\{\}]+", "", str(strVal))
+            regexCol = re.compile(":")
+            terms = re.split("[,\s]+", strVal)
+            keyvals = [re.split(regexCol, t) for t in terms]
+            x = re.compile("['\"]")
+            ret = {}
+            boolTrue  = re.compile("true" , flags=re.IGNORECASE)
+            boolFalse = re.compile("false", flags=re.IGNORECASE)
+            for k, v in keyvals:
+                k = re.sub(x, "", k)
+                v = re.sub(x, "", v)
+                if   re.search(boolTrue, v):    v = True
+                elif re.search(boolFalse, v):   v = False
+                else:
+                    if '.' in v:
+                        try:                    v = float(v)
+                        except:                 pass
+                    else:
+                        try:                    v = int(v)
+                        except:                 pass
+                ret[k] = v
+            return ret
+        ########################################################################
         self._validateAttrs(attrs)
         for k,v in iteritems(attrs):
             typecast = type( getattr(self, k) )
@@ -158,6 +194,7 @@ class PlayerRecord(object):
                                                 newval = typecast(v)
             elif "<" in str(v) or v==None:      newval = typecast(v)
             elif k == "initCmd":                newval = str(v) # specifically don't mangle the command as specified
+            elif k == "initOptions":            newval = convertStrToDict(v)
             else:                               newval = typecast(str(v).lower())
             setattr(self, k, newval)
         if self.isComputer: pass
