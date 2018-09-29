@@ -8,10 +8,12 @@ from __future__ import print_function # python 2/3 compatibility
 
 from six import itervalues # python 2/3 compatibility
 
+import argparse
 import sys
 import time
 
 from sc2players import constants as c
+from sc2players.__version__ import __version__
 from sc2players.playerManagement import *
 from sc2players.playerRecord import PlayerRecord
 
@@ -20,9 +22,11 @@ if __name__=='__main__': # mini/unit test
     """
     PURPOSE: command-line interface for map information
     """
-    from argparse import ArgumentParser
     usage_def = ""#usage:  %prog  <gameVersion>  <options>"
-    parser = ArgumentParser(usage_def, description=__doc__)
+    parser = argparse.ArgumentParser(
+       #usage="python %s"%__file__,
+        description=__doc__,
+        epilog="version: %s"%__version__)
     # main routine behavior
     #parser.add_argument("--list"        , default=None, action="store_true" , help="Display all known players.")
     #parser.add_argument("--path"        , default=None, action="store_true" , help="provide the absolute path to the file")
@@ -76,6 +80,8 @@ if __name__=='__main__': # mini/unit test
             attrs = [("type", r.type)]
             if r.type in [c.BOT, c.AI]:
                 attrs.append(("init command", r.initCmd))
+            attrs.append(("init options", r.initOptStr))
+            attrs.append(("default race", r.raceDefault))
             attrs.append(("total matches", len(r.matches)))
             attrs.append(("rating", r.rating))
             attrs.append(("creation", time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(r.created))))
