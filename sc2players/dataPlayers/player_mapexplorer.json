@@ -1,6 +1,10 @@
 {
     "created": 1527519534.7267036,
     "initCmd": "sc2ai.agents.newExplorer",
+    "initOptions": {
+        "raw": true
+    },
+    "raceDefault": "random",
     "name": "mapexplorer",
     "rating": 0,
     "type": "ai"

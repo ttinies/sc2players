@@ -1,6 +1,10 @@
 {
     "created": 1528431509.2374258,
     "initCmd": "",
+    "initOptions": {
+        "raw": true
+    },
+    "raceDefault": "random",
     "rating": 500,
     "type": "human"
 }
