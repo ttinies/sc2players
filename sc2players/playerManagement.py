@@ -64,12 +64,14 @@ def delPlayer(name):
 
 
 ################################################################################
-def buildPlayer(name, ptype, cmd='', difficulty=None, rating=None, race=None, obs=False, pid=0):
+def buildPlayer(name, ptype, cmd='', options={}, difficulty=None, rating=None,
+        race=None, obs=False, pid=0, raceDefault=c.RANDOM):
     newRating = rating or c.DEFAULT_RATING
     if not isinstance(difficulty, c.ComputerDifficulties):
           newDiff = c.ComputerDifficulties(difficulty)
     else: newDiff =                        difficulty
-    ret = PlayerRecord(name=name, type=ptype, initCmd=cmd, difficulty=newDiff, rating=newRating)
+    ret = PlayerRecord(name=name, type=ptype, initCmd=cmd, initOptions=options,
+        difficulty=newDiff, rating=newRating, raceDefault=raceDefault)
     if bool(race or obs or pid):
           return PlayerPreGame(ret, selectedRace=race, observe=obs, playerID=pid)
     else: return ret
